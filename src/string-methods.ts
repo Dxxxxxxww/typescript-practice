@@ -25,6 +25,25 @@ type MyStringToUnion<S extends string> = S extends `${infer L}${infer R}`
 
 type mstu1 = MyStringToUnion<'123'>;
 
+// trim
+
+type MySpace = ' ' | '\n' | '\t';
+type MyTrimLeft<S extends string> = S extends `${MySpace}${infer R}`
+  ? MyTrimLeft<R>
+  : S;
+type MyTrimRight<S extends string> = S extends `${infer L}${MySpace}`
+  ? MyTrimRight<L>
+  : S;
+type MyTrim<S extends string> = S extends
+  | `${infer Rest}${MySpace}`
+  | `${MySpace}${infer Rest}`
+  ? MyTrim<Rest>
+  : S;
+
+type mtl1 = MyTrimLeft<'   123'>;
+type mtr1 = MyTrimRight<'123  '>;
+type mt1 = MyTrim<'    123    '>;
+
 // Capitalize
 type MyCapitalize<S extends string> = S extends `${infer L}${infer R}`
   ? `${Uppercase<L>}${R}`

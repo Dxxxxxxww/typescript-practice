@@ -61,3 +61,39 @@ let objR6: r6;
 let objMr6: mr6;
 // objR6.  // name  age  address  sex order
 // objMr6. // name  age  address  sex order
+
+// ReturnType
+type MyReturnType<F extends (...args: any[]) => any> = F extends (
+  ...args: any[]
+) => infer R
+  ? R
+  : never;
+// type MyReturnType<T extends (...args: any[]) => any> = T extends (
+//   ...args: any[]
+// ) => infer R
+//   ? R
+//   : any;
+// type MyReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
+
+const add = (a: number): number => a + 1;
+
+type UserInfo = {
+  name: string;
+  age: number;
+};
+
+function login(username: string, password: string): UserInfo {
+  const userInfo = { name: 'admin', age: 99 };
+  return userInfo;
+}
+
+type mrt1 = MyReturnType<login>;
+type mrt2 = MyReturnType<add>;
+
+// Params
+type MyParams<T> = T extends (...args: infer R) => any ? R : never;
+type mp1 = MyParams<add>;
+
+// PromiseType
+type MyPromiseType<T> = T extends Promise<infer R> ? R : never;
+type mpt1 = MyPromiseType<Promise<number>>;
