@@ -4,6 +4,10 @@ type User = {
   name: string;
   age?: number;
   readonly address?: string;
+  job: {
+    name: string;
+    salary: number;
+  };
 };
 
 type MyReadonly<T> = {
@@ -11,7 +15,32 @@ type MyReadonly<T> = {
 };
 
 type r1 = Readonly<User>;
-type mr1 = Readonly<User>;
+type mr1 = MyReadonly<User>;
+
+// MyReadonly 扩展1，支持传参
+type MyReadonly2<T, K extends keyof T = keyof T> = {
+  readonly [P in K]: T[P];
+};
+
+type mr2 = MyReadonly2<User, 'name' | 'age'>;
+
+// MyReadonly 扩展2，支持深层
+
+type MyReadonly3<T> = {
+  readonly [P in keyof T]: T[P] extends { [key: string]: any }
+    ? MyReadonly3<T[P]>
+    : T[P];
+};
+
+type mr3 = MyReadonly3<User>;
+
+// MyReadonly 扩展3，按需但是保留原来的，应该是要这样的，因为只是按需 readonly，不能把原来的键给扔了
+
+type MyReadonly4<T, K extends keyof T = keyof T> = T & {
+  readonly [P in K]: T[P];
+};
+
+type mr4 = MyReadonly4<User, 'name' | 'age'>;
 
 // Required
 
@@ -96,4 +125,13 @@ type mp1 = MyParams<add>;
 
 // PromiseType
 type MyPromiseType<T> = T extends Promise<infer R> ? R : never;
-type mpt1 = MyPromiseType<Promise<number>>;
+type mpt1 = MyPromiseType<Promise<number | string>>;
+
+// PromiseType 扩展1，支持嵌套
+type MyPromiseType2<T> = T extends Promise<infer R>
+  ? R extends Promise<any>
+    ? MyPromiseType2<R>
+    : R
+  : never;
+
+type mpt2 = MyPromiseType2<Promise<string> | Promise<number>>;
