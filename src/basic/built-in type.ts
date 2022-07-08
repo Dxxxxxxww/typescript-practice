@@ -135,3 +135,11 @@ type MyPromiseType2<T> = T extends Promise<infer R>
   : never;
 
 type mpt2 = MyPromiseType2<Promise<string> | Promise<number>>;
+
+type MyAppendArgument<T extends (...args: any[]) => any, K> = T extends (
+  ...args: infer U
+) => infer R
+  ? (...args: [...U, K]) => R
+  : never;
+
+type maa1 = MyAppendArgument<(a: number) => number, string>;

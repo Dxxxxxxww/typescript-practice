@@ -6,7 +6,12 @@ type MyExtract<T, U> = T extends U ? T : never;
 // index: 2 address     extends 'age' | 'sex'   => never
 // 得到结果 never | age | never
 // 联合类型中如果有 never，则会去除 never，因为 never 表示不返回任何类型
-type res = MyExtract<'name' | 'age' | 'address', 'age' | 'sex'>;
+type mext1 = MyExtract<'name' | 'age' | 'address', 'age' | 'sex'>;
+
+// 排除，分布式条件判断
+type MyExclude<T, U> = T extends U ? never : T;
+
+type me1 = MyExclude<'name' | 'age' | 'address', 'age' | 'sex' | 'address'>;
 
 // as 新用法 隐藏下划线开头的属性
 // 这里的 as 可以理解为迭代循环中的 if 条件判断。可以理解为进一步类型断言。
