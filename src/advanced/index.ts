@@ -8,7 +8,7 @@ type MyExtract<T, U> = T extends U ? T : never;
 // 联合类型中如果有 never，则会去除 never，因为 never 表示不返回任何类型
 type mext1 = MyExtract<'name' | 'age' | 'address', 'age' | 'sex'>;
 
-// 排除，分布式条件判断
+// 排除，判断 T 是否在 U 中，如果在则排除。分布式条件判断
 type MyExclude<T, U> = T extends U ? never : T;
 
 type me1 = MyExclude<'name' | 'age' | 'address', 'age' | 'sex' | 'address'>;
