@@ -65,3 +65,24 @@ type MyFlat<T extends any[]> = T extends [infer L, ...infer Rest]
     : [L, ...MyFlat<Rest>]
   : [];
 type mf1 = MyFlat<[1, [2, [3, [4]]]]>;
+
+// LookUp
+
+interface Cat {
+  type: 'cat';
+  breeds: 'Abyssinian' | 'Shorthair' | 'Curl' | 'Bengal';
+}
+
+interface Dog {
+  type: 'dog';
+  breeds: 'Hound' | 'Brittany' | 'Bulldog' | 'Boxer';
+  color: 'brown' | 'white' | 'black';
+}
+
+type MyLookUp<T extends { type: string }, K extends string> = T extends {
+  type: K;
+}
+  ? T
+  : never;
+
+type MyDogType = MyLookUp<Cat | Dog, 'dog'>; // expected to be `Dog`

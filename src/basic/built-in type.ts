@@ -136,6 +136,7 @@ type MyPromiseType2<T> = T extends Promise<infer R>
 
 type mpt2 = MyPromiseType2<Promise<string> | Promise<number>>;
 
+// AppendArgument
 type MyAppendArgument<T extends (...args: any[]) => any, K> = T extends (
   ...args: infer U
 ) => infer R
@@ -143,3 +144,9 @@ type MyAppendArgument<T extends (...args: any[]) => any, K> = T extends (
   : never;
 
 type maa1 = MyAppendArgument<(a: number) => number, string>;
+
+// omit
+type MyOmit<T, K extends any> = Pick<T, Exclude<keyof T, K>>;
+
+type omit1 = Omit<User, 'name' | 'age'>;
+type omit2 = MyOmit<User, 'name' | 'age'>;
