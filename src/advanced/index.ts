@@ -28,3 +28,34 @@ type User2 = {
 };
 
 type mfiu = ForIn<User2>;
+
+// isUnion 是否是联合类型，这里使用 extends 是为了使用分布式条件类型
+type MyIsUnion<T, U = T> = T extends U
+  ? [MyExclude<U, T>] extends [never]
+    ? false
+    : true
+  : never;
+
+type miu1 = MyIsUnion<'a' | 'b' | 'c'>;
+
+// MyPermutation 排列组合
+type MyPermutation<T, U = T> = [T] extends [never]
+  ? []
+  : T extends U
+  ? [T, ...MyPermutation<MyExclude<U, T>>]
+  : never;
+
+type mpmtt1 = MyPermutation<'A' | 'B' | 'C'>;
+
+// AppendToObject，方法1，迭代
+type MyAppendToObject1<T, K extends string, V> = {
+  [P in keyof T | K]: P extends keyof T ? T[P] : V;
+};
+
+type mato1 = MyAppendToObject1<User2, 'address', string>;
+
+// AppendToObject，方法2，交集 &
+type MyAppendToObject2<T, K extends string, V> = T & {
+  [P in K]: V;
+};
+type mato2 = MyAppendToObject2<User2, 'address', string>;
