@@ -59,3 +59,22 @@ type MyAppendToObject2<T, K extends string, V> = T & {
   [P in K]: V;
 };
 type mato2 = MyAppendToObject2<User2, 'address', string>;
+
+// Diff
+
+type User3 = {
+  _id: number;
+  name: string;
+  age: number;
+};
+
+type Person = {
+  name: string;
+  age: number;
+  address: string;
+  birthday: string;
+};
+
+type MyDiff<T, P> = MyExclude<keyof T | keyof P, MyExtract<keyof T, keyof P>>;
+
+type df1 = MyDiff<User3, Person>;
