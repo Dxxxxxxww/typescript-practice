@@ -48,3 +48,25 @@ type spaceX = [
   'HUMAN SPACEFLIGHT'
 ];
 type tcot1 = TCLengthOfTuple<spaceX>;
+
+// Exclude
+type TCExclude<T, K> = T extends K ? never : T;
+
+type tcexc1 = TCExclude<'a' | 'b' | 'c', 'a'>; // 'b' | 'c'
+
+// Await
+type TCAwait<T> = T extends Promise<infer U> ? U : never;
+
+type tca1 = TCAwait<Promise<string>>;
+
+type tca2 = TCAwait<Promise<string> | Promise<number>>;
+
+type TCAwait2<T> = T extends Promise<infer U>
+  ? U extends Promise<any>
+    ? TCAwait2<U>
+    : U
+  : never;
+
+type tca3 = TCAwait2<Promise<string> | Promise<number>>;
+
+type tca4 = TCAwait2<Promise<Promise<number>>>;
