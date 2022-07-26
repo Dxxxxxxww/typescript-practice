@@ -70,3 +70,37 @@ type TCAwait2<T> = T extends Promise<infer U>
 type tca3 = TCAwait2<Promise<string> | Promise<number>>;
 
 type tca4 = TCAwait2<Promise<Promise<number>>>;
+
+// IF
+type TCIF<T extends boolean, U, P> = T extends true ? U : P;
+
+type tcif1 = TCIF<true, 'a', 'b'>;
+type tcif2 = TCIF<false, 'a', 'b'>;
+
+// Concat
+type TCConcat<T extends any[], U extends any[]> = [...T, ...U];
+type tcc1 = TCConcat<[1], [2]>;
+
+// Includes
+type TCIncludes<T extends any[], U extends any> = U extends T[number]
+  ? true
+  : false;
+type tcids1 = TCIncludes<['Kars', 'Esidisi', 'Wamuu', 'Santana'], 'Dio'>;
+type tcids2 = TCIncludes<['Kars', 'Esidisi', 'Wamuu', 'Santana', 'Dio'], 'Dio'>;
+// goods answer
+type Includes<T extends readonly any[], U> = T extends [infer X, ...infer Rest]
+  ? IsEqual<U, X> extends true
+    ? true
+    : Includes<Rest, U>
+  : false;
+// type Includes<T extends readonly any[], U> = T extends [infer first, ...infer rest] ? Equal<first, U> extends true ? true : Includes<rest, U> : false
+// type IsEqual<A, B> = A extends B ? B extends A ? true : false : false
+// type IsEqual<A, B> = [A] extends [B] ? [B] extends [A] ? true : false : false
+// type IsEqual<A, B> = [A, B] extends [B, A] ? true : false
+type IsEqual<A, B> = (<T>() => T extends A ? true : false) extends <
+  T
+>() => T extends B ? true : false
+  ? true
+  : false;
+type tcids3 = Includes<['Kars', 'Esidisi', 'Wamuu', 'Santana'], 'Dio'>;
+type tcids4 = Includes<['Kars', 'Esidisi', 'Wamuu', 'Santana', 'Dio'], 'Dio'>;
