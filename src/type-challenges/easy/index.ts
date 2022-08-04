@@ -105,4 +105,19 @@ type IsEqual<A, B> = (<T>() => T extends A ? true : false) extends <
 type tcids3 = Includes<['Kars', 'Esidisi', 'Wamuu', 'Santana'], 'Dio'>;
 type tcids4 = Includes<['Kars', 'Esidisi', 'Wamuu', 'Santana', 'Dio'], 'Dio'>;
 
+// Push
+type TCPush<T extends any[], U> = [...T, U];
 
+type tcps1 = TCPush<[1, 2], '3'>;
+
+// Unshift
+type TCUnshift<T extends any[], U> = [U, ...T];
+
+type tcunsft1 = TCUnshift<[1, 2], '3'>;
+
+// Parameters
+type TCParameters<T> = T extends (...args: infer U) => any ? U : never;
+
+const foo = (arg1: string, arg2: number): void => {};
+
+type tcparamters1 = TCParameters<typeof foo>;
