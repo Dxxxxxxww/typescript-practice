@@ -101,3 +101,62 @@ type X = {
 type tcDeepReadonly1 = TCDeepReadonly<X>;
 type tcDeepReadonly2 = TCDeepReadonly2<X>;
 type tcDeepReadonly3 = TCDeepReadonly3<X>;
+
+// Tuple to Union
+type TCTupleToUnion<T extends any[]> = T[number];
+
+type tcttu1 = TCTupleToUnion<['1', '2', '3']>;
+
+// Chainable Options 不会写
+type Chainable<T = {}> = {
+  option: <K extends string, V>(
+    key: K extends keyof T ? never : K,
+    value: V
+  ) => Chainable<T & Record<K, V>>;
+  get: () => T;
+};
+
+declare const config: Chainable;
+
+const result = config
+  .option('foo', 123)
+  .option('name', 'type-challenges')
+  .option('bar', { value: 'Hello World' })
+  .get();
+
+// expect the type of result to be:
+interface Result {
+  foo: number;
+  name: string;
+  bar: {
+    value: string;
+  };
+}
+
+type Chainable2<T = {}> = {
+  option<K extends string, V extends any>(
+    key: K,
+    value: Exclude<V, K extends keyof T ? T[K] : never>
+  ): Chainable2<{
+    [k in keyof T | K]: k extends keyof T ? (K extends keyof T ? V : T[k]) : V;
+  }>;
+  get(): T;
+};
+
+declare const config2: Chainable2;
+const result = config
+  .option('foo', 123)
+  .option('name', 'type-challenges')
+  .option('bar', { value: 'Hello World' })
+  .get();
+
+// Last of Array
+type TCLastOfArray<T extends any[]> = T extends [...infer L, infer R]
+  ? R
+  : never;
+
+type arr11111 = ['a', 'b', 'c'];
+type arr22222 = [3];
+
+type tcoa1 = TCLastOfArray<arr11111>;
+type tcoa2 = TCLastOfArray<arr22222>;
