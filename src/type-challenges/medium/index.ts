@@ -160,3 +160,30 @@ type arr22222 = [3];
 
 type tcoa1 = TCLastOfArray<arr11111>;
 type tcoa2 = TCLastOfArray<arr22222>;
+
+// Pop
+type TCPop<T extends any[]> = T extends [...infer L, infer R] ? L : never;
+
+type tcpop1 = TCPop<['a', 'b', 'c', 'd']>; // expected to be ['a', 'b', 'c']
+type tcpop2 = TCPop<[3, 2, 1]>; // expected to be [3, 2]
+
+// Promise.all 不会写
+declare function PromiseAll1<T extends any[]>(
+  values: readonly [...T]
+): Promise<{ [k in keyof T]: T[k] extends Promise<infer R> ? R : T[k] }>;
+
+type MyAwaited<T> = T extends Promise<infer P> ? P : T;
+declare function PromiseAll2<T extends any[]>(
+  values: readonly [...T]
+): Promise<{ [P in keyof T]: MyAwaited<T[P]> }>;
+
+const promise1 = Promise.resolve(3);
+const promise2 = 42;
+const promise3 = new Promise<string>((resolve, reject) => {
+  setTimeout(resolve, 100, 'foo');
+});
+
+// expected to be `Promise<[number, 42, string]>`
+const p1 = PromiseAll1([promise1, promise2, promise3] as const);
+const p2 = PromiseAll2([promise1, promise2, promise3] as const);
+type tp2 = keyof promise3;
