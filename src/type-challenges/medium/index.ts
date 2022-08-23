@@ -187,3 +187,29 @@ const promise3 = new Promise<string>((resolve, reject) => {
 const p1 = PromiseAll1([promise1, promise2, promise3] as const);
 const p2 = PromiseAll2([promise1, promise2, promise3] as const);
 type tp2 = keyof promise3;
+
+// Replace
+type TCReplace<
+  S extends string,
+  From extends string,
+  To extends string
+> = S extends ''
+  ? S
+  : S extends `${infer L}${From}${infer R}`
+  ? `${L}${To}${R}`
+  : S;
+
+type tcrp1 = TCReplace<'types are fun!', 'fun', 'awesome'>;
+
+// ReplaceAll
+type TCReplaceAll<
+  S extends string,
+  From extends string,
+  To extends string
+> = S extends ''
+  ? S
+  : S extends `${infer L}${From}${infer R}`
+  ? `${L}${To}${TCReplaceAll<R, From, To>}`
+  : S;
+
+type tcrpa1 = TCReplaceAll<'t y p e s', ' ', ''>;
