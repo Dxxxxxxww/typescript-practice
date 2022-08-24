@@ -213,3 +213,10 @@ type TCReplaceAll<
   : S;
 
 type tcrpa1 = TCReplaceAll<'t y p e s', ' ', ''>;
+
+// Append Argument
+type TCAppendArgument<Fn, A> = Fn extends (...args: infer L) => infer R
+  ? (...args: [...L, A]) => R
+  : never;
+
+type tcaa1 = TCAppendArgument<(a: number, b: string) => number, boolean>;
