@@ -220,3 +220,24 @@ type TCAppendArgument<Fn, A> = Fn extends (...args: infer L) => infer R
   : never;
 
 type tcaa1 = TCAppendArgument<(a: number, b: string) => number, boolean>;
+
+// Permutation 不会写
+// 思路：具体参考 https://github.com/type-challenges/type-challenges/issues/614，思路很详细
+// https://github.com/microsoft/TypeScript/issues/23182   T extends never 写法必须为 [T] extends [never] 可能是 ts 的bug
+type TCPermutation<T, U = T> = [T] extends [never]
+  ? []
+  : T extends U
+  ? [T, ...TCPermutation<Exclude<U, T>>]
+  : never;
+
+type tcperm1 = TCPermutation<'A' | 'B' | 'C'>;
+
+// String length
+type TCStringLength<
+  S extends string,
+  A extends string[] = []
+> = S extends `${infer L}${infer R}`
+  ? TCStringLength<R, [...A, L]>
+  : A['length'];
+
+type tcsl1 = TCStringLength<'abc'>;

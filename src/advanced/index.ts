@@ -38,7 +38,7 @@ type MyIsUnion<T, U = T> = T extends U
 
 type miu1 = MyIsUnion<'a' | 'b' | 'c'>;
 
-// MyPermutation 排列组合
+// MyPermutation 排列组合 分布式条件类型
 type MyPermutation<T, U = T> = [T] extends [never]
   ? []
   : T extends U
