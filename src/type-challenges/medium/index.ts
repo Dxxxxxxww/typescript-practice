@@ -241,3 +241,29 @@ type TCStringLength<
   : A['length'];
 
 type tcsl1 = TCStringLength<'abc'>;
+
+// Flatten
+type TCFlatten<T extends any[]> = T extends [infer L, ...infer R]
+  ? L extends any[]
+    ? [...TCFlatten<L>, ...TCFlatten<R>]
+    : [L, ...TCFlatten<R>]
+  : T;
+
+type tcfl1 = TCFlatten<[1, 2, [3, 4], [[[5]]]]>;
+
+// Append to object
+type TCAppendToObject<O extends Object, K extends String, V extends any> = {
+  [P in keyof O | K]: P extends keyof O ? O[P] : V;
+};
+
+type TCAppendToObject2<
+  O extends Object,
+  K extends String,
+  V extends any
+> = O & {
+  [P in K]: V;
+};
+
+type TestTCAppendToObject = { id: '1' };
+type tcato1 = TCAppendToObject<TestTCAppendToObject, 'value', 4>;
+type tcato2 = TCAppendToObject2<TestTCAppendToObject, 'value', 4>;
