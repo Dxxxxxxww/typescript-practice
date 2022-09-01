@@ -267,3 +267,10 @@ type TCAppendToObject2<
 type TestTCAppendToObject = { id: '1' };
 type tcato1 = TCAppendToObject<TestTCAppendToObject, 'value', 4>;
 type tcato2 = TCAppendToObject2<TestTCAppendToObject, 'value', 4>;
+
+// Absolute
+type TCAbsolute<T extends string | number | bigint> = `${T}` extends `-${infer R}`
+  ? `${R}`
+  : `${T}`;
+
+type tcas1 = TCAbsolute<-100>;
