@@ -269,8 +269,14 @@ type tcato1 = TCAppendToObject<TestTCAppendToObject, 'value', 4>;
 type tcato2 = TCAppendToObject2<TestTCAppendToObject, 'value', 4>;
 
 // Absolute
-type TCAbsolute<T extends string | number | bigint> = `${T}` extends `-${infer R}`
-  ? `${R}`
-  : `${T}`;
+type TCAbsolute<T extends string | number | bigint> =
+  `${T}` extends `-${infer R}` ? `${R}` : `${T}`;
 
 type tcas1 = TCAbsolute<-100>;
+
+// String to Union
+type TCStringToUnion<S extends string> = S extends `${infer L}${infer R}`
+  ? L | TCStringToUnion<R>
+  : never;
+
+type tcstu1 = TCStringToUnion<'123'>;
