@@ -280,3 +280,23 @@ type TCStringToUnion<S extends string> = S extends `${infer L}${infer R}`
   : never;
 
 type tcstu1 = TCStringToUnion<'123'>;
+
+// Merge
+type TCMerge<T, O> = {
+  [K in keyof T | keyof O]: K extends keyof O
+    ? O[K]
+    : K extends keyof T
+    ? T[K]
+    : never;
+};
+
+type tcmerge1 = TCMerge<
+  {
+    name: string;
+    age: string;
+  },
+  {
+    age: number;
+    sex: string;
+  }
+>;
