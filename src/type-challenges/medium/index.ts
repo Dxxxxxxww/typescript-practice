@@ -300,3 +300,13 @@ type tcmerge1 = TCMerge<
     sex: string;
   }
 >;
+
+// KebabCase
+type TCKebabCase<S extends string> = S extends `${infer L}${infer R}`
+  ? R extends Uncapitalize<R>
+    ? `${Lowercase<L>}${TCKebabCase<R>}`
+    : `${Lowercase<L>}-${TCKebabCase<R>}`
+  : S;
+
+type tckbbc1 = TCKebabCase<'aBC'>;
+type tckbbc2 = TCKebabCase<'a-b-c'>;
