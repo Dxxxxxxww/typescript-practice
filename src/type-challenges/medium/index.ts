@@ -310,3 +310,39 @@ type TCKebabCase<S extends string> = S extends `${infer L}${infer R}`
 
 type tckbbc1 = TCKebabCase<'aBC'>;
 type tckbbc2 = TCKebabCase<'a-b-c'>;
+
+// Diff key 不会写--需要加强练习
+
+type TCDiffKey<T, P> = Exclude<keyof T | keyof P, Extract<keyof T, keyof P>>;
+
+type tcdk1 = TCDiffKey<
+  {
+    _id: number;
+    name: string;
+    age: number;
+  },
+  {
+    name: string;
+    age: number;
+    address: string;
+    birthday: string;
+  }
+>;
+
+// Diff Object 不会写--需要加强练习
+
+type TCDiffObj<T, P> = Omit<T & P, Extract<keyof T, keyof P>>;
+type TCDiffObj2<T, P> = Omit<T & P, keyof T & keyof P>;
+
+type tcdo1 = TCDiffObj<
+  { name: 'name'; age: 10 },
+  { age: 10; address: 'earth' }
+>;
+type tcdo2 = TCDiffObj2<
+  { name: 'name'; age: 10 },
+  { age: 10; address: 'earth' }
+>;
+
+type abc = ('a' | 'b' | 'c') & ('a' | 'b' | 'e');
+type def = { name: 'name'; age: 10 } & { age: 10; address: 'earth' };
+type zzz = { name: string; age: number } & { age: number; address: string };
