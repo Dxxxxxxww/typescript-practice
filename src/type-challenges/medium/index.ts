@@ -346,3 +346,19 @@ type tcdo2 = TCDiffObj2<
 type abc = ('a' | 'b' | 'c') & ('a' | 'b' | 'e');
 type def = { name: 'name'; age: 10 } & { age: 10; address: 'earth' };
 type zzz = { name: string; age: number } & { age: number; address: string };
+
+// Any Of 不会写
+type Falsy = false | 0 | '' | [] | { [k in string]: never };
+type TCAnyOf<T extends any[]> = T[number] extends Falsy ? false : true;
+
+type tcanyo1 = TCAnyOf<[1, '', false, [], {}]>; // expected to be true.
+type tcanyo2 = TCAnyOf<[0, '', false, [], {}]>; // expected to be false.
+
+// isNever
+type TCIsNever<T> = [T] extends [never] ? true : false;
+
+type A = TCIsNever<never>; // expected to be true
+type B = TCIsNever<undefined>; // expected to be false
+type C = TCIsNever<null>; // expected to be false
+type D = TCIsNever<[]>; // expected to be false
+type E = TCIsNever<number>; // expected to be false
